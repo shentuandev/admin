@@ -1,12 +1,13 @@
 /**
  * Created by hao.cheng on 2017/4/13.
  */
-import React, { Component } from 'react';
 import { Layout } from 'antd';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
+import React, { Component } from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { connectAlita } from 'redux-alita';
+import shentuan_admin from '../assets/shentuan_admin.png';
 import routes from '../routes/config';
 import SiderMenu from './SiderMenu';
-import { connectAlita } from 'redux-alita';
 
 const { Sider } = Layout;
 
@@ -94,7 +95,7 @@ class SiderCustom extends Component<SiderCustomProps, SiderCustomState> {
                 style={{ overflowY: 'auto' }}
                 className="sider-custom"
             >
-                <div className="logo" />
+                <img src={shentuan_admin} alt="shentuan_admin" className="logo" />
                 <SiderMenu
                     menus={[...routes.menus, ...smenus.data]}
                     onClick={this.menuClick}

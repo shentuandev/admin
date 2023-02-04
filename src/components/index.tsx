@@ -3,34 +3,35 @@
  * yezi 2018年6月24日
  */
 import Loadable from 'react-loadable';
-import Loading from './widget/Loading';
-import BasicForm from './forms/BasicForm';
-import BasicTable from './tables/BasicTables';
-import AdvancedTable from './tables/AdvancedTables';
-import AsynchronousTable from './tables/AsynchronousTable';
-import Echarts from './charts/Echarts';
-import Recharts from './charts/Recharts';
-import Icons from './ui/Icons';
-import Buttons from './ui/Buttons';
-import Spins from './ui/Spins';
-import Modals from './ui/Modals';
-import Notifications from './ui/Notifications';
-import Tabs from './ui/Tabs';
-import Banners from './ui/banners';
-import Drags from './ui/Draggable';
-import Dashboard from './dashboard/Dashboard';
-import Gallery from './ui/Gallery';
+import AllBuildings from '../shentuan/building/AllBuildings';
 import BasicAnimations from './animation/BasicAnimations';
 import ExampleAnimations from './animation/ExampleAnimations';
 import AuthBasic from './auth/Basic';
 import RouterEnter from './auth/RouterEnter';
+import Echarts from './charts/Echarts';
+import Recharts from './charts/Recharts';
 import Cssmodule from './cssmodule';
-import MapUi from './ui/map';
+import Dashboard from './dashboard/Dashboard';
+import MultipleMenu from './extension/MultipleMenu';
 import QueryParams from './extension/QueryParams';
 import Visitor from './extension/Visitor';
-import MultipleMenu from './extension/MultipleMenu';
+import BasicForm from './forms/BasicForm';
 import Sub1 from './smenu/Sub1';
 import Sub2 from './smenu/Sub2';
+import AdvancedTable from './tables/AdvancedTables';
+import AsynchronousTable from './tables/AsynchronousTable';
+import BasicTable from './tables/BasicTables';
+import Banners from './ui/banners';
+import Buttons from './ui/Buttons';
+import Drags from './ui/Draggable';
+import Gallery from './ui/Gallery';
+import Icons from './ui/Icons';
+import MapUi from './ui/map';
+import Modals from './ui/Modals';
+import Notifications from './ui/Notifications';
+import Spins from './ui/Spins';
+import Tabs from './ui/Tabs';
+import Loading from './widget/Loading';
 
 const WysiwygBundle = Loadable({
     // 按需加载富文本配置
@@ -39,6 +40,7 @@ const WysiwygBundle = Loadable({
 });
 
 export default {
+    AllBuildings,
     BasicForm,
     BasicTable,
     AdvancedTable,

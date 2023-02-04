@@ -21,6 +21,15 @@ const menus: {
 } = {
     menus: [
         // 菜单相关路由
+        {
+            key: '/app/building',
+            title: '楼栋管理',
+            icon: 'shop',
+            subs: [
+                { key: '/app/building/list', title: '楼栋列表', component: 'AllBuildings' },
+                { key: '/app/building/apply', title: '入驻申请', component: 'Buttons' },
+            ],
+        },
         { key: '/app/dashboard/index', title: '首页', icon: 'mobile', component: 'Dashboard' },
         {
             key: '/app/ui',

@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Layout, notification, Icon } from 'antd';
-import umbrella from 'umbrella-storage';
+import { Icon, Layout, notification } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { useAlita } from 'redux-alita';
-import Routes from './routes';
-import SiderCustom from './components/SiderCustom';
+import umbrella from 'umbrella-storage';
 import HeaderCustom from './components/HeaderCustom';
-import { ThemePicker, Copyright } from './components/widget';
+import SiderCustom from './components/SiderCustom';
+import { Copyright, ThemePicker } from './components/widget';
+import Routes from './routes';
 import { checkLogin } from './utils';
-import { fetchMenu } from './service';
 
 const { Content, Footer } = Layout;
 
@@ -77,17 +76,17 @@ function openFNotification() {
  * 获取服务端异步菜单
  * @param handler 执行回调
  */
-function fetchSmenu(handler: any) {
-    const setAlitaMenu = (menus: any) => {
-        handler(menus);
-        // this.props.setAlitaState({ stateName: 'smenus', data: menus });
-    };
-    setAlitaMenu(umbrella.getLocalStorage('smenus') || []);
-    fetchMenu().then((smenus) => {
-        setAlitaMenu(smenus);
-        umbrella.setLocalStorage('smenus', smenus);
-    });
-}
+// function fetchSmenu(handler: any) {
+//     const setAlitaMenu = (menus: any) => {
+//         handler(menus);
+//         // this.props.setAlitaState({ stateName: 'smenus', data: menus });
+//     };
+//     setAlitaMenu(umbrella.getLocalStorage('smenus') || []);
+//     fetchMenu().then((smenus) => {
+//         setAlitaMenu(smenus);
+//         umbrella.setLocalStorage('smenus', smenus);
+//     });
+// }
 
 const App = (props: AppProps) => {
     const [collapsed, setCollapsed] = useState<boolean>(false);
@@ -104,7 +103,7 @@ const App = (props: AppProps) => {
 
         handleResize((isMobile: boolean) => setAlita('responsive', { isMobile }));
         openFNotification();
-        fetchSmenu((smenus: any[]) => setAlita('smenus', smenus));
+        // fetchSmenu((smenus: any[]) => setAlita('smenus', smenus));
     }, [setAlita]);
 
     function toggle() {

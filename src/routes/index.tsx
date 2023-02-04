@@ -2,12 +2,10 @@
  * Created by 叶子 on 2017/8/13.
  */
 import React from 'react';
-import { Route, Redirect, Switch } from 'react-router-dom';
-import { useAlita } from 'redux-alita';
-import umbrella from 'umbrella-storage';
+import { Redirect, Route, Switch } from 'react-router-dom';
 import AllComponents from '../components';
-import routesConfig, { IFMenuBase, IFMenu } from './config';
 import { checkLogin } from '../utils';
+import routesConfig, { IFMenu, IFMenuBase } from './config';
 import RouteWrapper from './RouteWrapper';
 
 type CRouterProps = {
@@ -16,8 +14,6 @@ type CRouterProps = {
 
 const CRouter = (props: CRouterProps) => {
     const { auth } = props;
-    const [smenus] = useAlita({ smenus: null }, { light: true });
-
     const getPermits = (): any[] | null => {
         return auth ? auth.permissions : null;
     };
@@ -59,11 +55,9 @@ const CRouter = (props: CRouterProps) => {
         return r.component ? route(r) : subRoute(r);
     };
     const createRoute = (key: string) => routesConfig[key].map(createMenu);
-    const getAsyncMenus = () => smenus || umbrella.getLocalStorage('smenus') || [];
     return (
         <Switch>
             {Object.keys(routesConfig).map((key) => createRoute(key))}
-            {getAsyncMenus().map(createMenu)}
             <Route render={() => <Redirect to="/404" />} />
         </Switch>
     );

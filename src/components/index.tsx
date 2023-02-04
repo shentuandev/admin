@@ -3,7 +3,8 @@
  * yezi 2018年6月24日
  */
 import Loadable from 'react-loadable';
-import AllBuildings from '../shentuan/building/AllBuildings';
+import { ApplyBuildingList } from '../shentuan/building/apply/ApplyBuildingList';
+import { BuildingList } from '../shentuan/building/list/BuildingList';
 import BasicAnimations from './animation/BasicAnimations';
 import ExampleAnimations from './animation/ExampleAnimations';
 import AuthBasic from './auth/Basic';
@@ -40,7 +41,8 @@ const WysiwygBundle = Loadable({
 });
 
 export default {
-    AllBuildings,
+    ApplyBuildingList,
+    BuildingList,
     BasicForm,
     BasicTable,
     AdvancedTable,

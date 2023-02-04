@@ -1,8 +1,8 @@
 /**
  * Created by hao.cheng on 2017/4/15.
  */
+import { Button, Icon, Table } from 'antd';
 import React from 'react';
-import { Table, Icon, Button } from 'antd';
 
 const columns = [
     {

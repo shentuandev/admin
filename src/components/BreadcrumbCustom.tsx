@@ -1,9 +1,8 @@
 /**
  * Created by hao.cheng on 2017/4/22.
  */
-import React from 'react';
 import { Breadcrumb } from 'antd';
-import { Link } from 'react-router-dom';
+import React from 'react';
 
 type BreadcrumbCustomProps = {
     first?: string;
@@ -16,9 +15,6 @@ class BreadcrumbCustom extends React.Component<BreadcrumbCustomProps> {
         return (
             <span>
                 <Breadcrumb style={{ margin: '12px 0' }}>
-                    <Breadcrumb.Item>
-                        <Link to={'/app/dashboard/index'}>首页</Link>
-                    </Breadcrumb.Item>
                     {first}
                     {second}
                 </Breadcrumb>

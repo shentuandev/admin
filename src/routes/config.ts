@@ -24,10 +24,42 @@ const menus: {
         {
             key: '/app/building',
             title: '楼栋管理',
+            icon: 'environment',
+            subs: [
+                { key: '/app/building/list', title: '楼栋列表', component: 'BuildingList' },
+                { key: '/app/building/apply', title: '入驻申请', component: 'ApplyBuildingList' },
+            ],
+        },
+        {
+            key: '/app/merchant',
+            title: '商户管理',
             icon: 'shop',
             subs: [
-                { key: '/app/building/list', title: '楼栋列表', component: 'AllBuildings' },
-                { key: '/app/building/apply', title: '入驻申请', component: 'Buttons' },
+                {
+                    key: '/app/merchant/settle_status',
+                    title: '入驻详情',
+                    component: 'BuildingList',
+                },
+                {
+                    key: '/app/merchant/settle_apply',
+                    title: '入驻申请',
+                    component: 'ApplyBuildingList',
+                },
+                {
+                    key: '/app/merchant/bank_info',
+                    title: '收款信息',
+                    component: 'ApplyBuildingList',
+                },
+                {
+                    key: '/app/merchant/withdraw_money',
+                    title: '提现列表',
+                    component: 'ApplyBuildingList',
+                },
+                {
+                    key: '/app/merchant/business_statics',
+                    title: '经营统计',
+                    component: 'ApplyBuildingList',
+                },
             ],
         },
         { key: '/app/dashboard/index', title: '首页', icon: 'mobile', component: 'Dashboard' },

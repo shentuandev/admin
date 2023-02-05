@@ -2,22 +2,22 @@
  * Created by hao.cheng on 2017/4/16.
  */
 import axios from 'axios';
-import { get, post } from './tools';
 import * as config from './config';
+import { get, post } from './tools';
 
 export const getBbcNews = () => get({ url: config.NEWS_BBC });
 
 export const npmDependencies = () =>
     axios
         .get('./npm.json')
-        .then(res => res.data)
-        .catch(err => console.log(err));
+        .then((res) => res.data)
+        .catch((err) => console.log(err));
 
 export const weibo = () =>
     axios
         .get('./weibo.json')
-        .then(res => res.data)
-        .catch(err => console.log(err));
+        .then((res) => res.data)
+        .catch((err) => console.log(err));
 
 export const gitOauthLogin = () =>
     get({
@@ -45,3 +45,11 @@ export const admin = () => get({ url: config.MOCK_AUTH_ADMIN });
 export const guest = () => get({ url: config.MOCK_AUTH_VISITOR });
 /** 获取服务端菜单 */
 export const fetchMenu = () => get({ url: config.MOCK_MENU });
+
+export const getAllBuildings = () => post({ url: '/manage/getBuildings' });
+
+export const getAllBuildingApplyList = () => post({ url: '/manage/buildingMerchantList' });
+
+// 审核入驻申请，可强制取消某个商家的入驻
+export const examineBuildingApply = (buildingId: string, merchantId: string, status: number) =>
+    post({ url: '/manage/confirmBuildingMerchant', data: { buildingId, merchantId, status } });

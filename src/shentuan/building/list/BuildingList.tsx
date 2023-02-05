@@ -1,9 +1,18 @@
-import { Card, Col, Row } from 'antd';
-import React from 'react';
+import { Card, Col, Row, Table } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { getAllBuildings } from '../../../axios';
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom';
-import BasicTable from '../../../components/tables/BasicTable';
+import { BuildingInfo } from '../../types/BuildingInfo';
 
 export function BuildingList() {
+    const [allBuildings, updateBuildings] = useState<BuildingInfo[]>([]);
+    const [isLoading, updateLoadingState] = useState<boolean>(true);
+    useEffect(() => {
+        getAllBuildings().then((data) => {
+            updateBuildings(data.list);
+            updateLoadingState(false);
+        });
+    }, []);
     return (
         <div className="gutter-example">
             <BreadcrumbCustom first="楼栋管理" second="楼栋列表" />
@@ -11,7 +20,7 @@ export function BuildingList() {
                 <Col className="gutter-row" md={24}>
                     <div className="gutter-box">
                         <Card bordered={false}>
-                            <BasicTable />
+                            <Content buildings={allBuildings} isLoading={isLoading} />
                         </Card>
                     </div>
                 </Col>
@@ -62,32 +71,12 @@ const columns = [
         dataIndex: 'applyStatus',
         key: 'applyStatus',
     },
-    {
-        title: '开放状态',
-        dataIndex: 'applyStatus',
-        key: 'applyStatus',
-    },
 ];
 
-const data = [
-    {
-        key: '1',
-        name: 'John Brown',
-        age: 32,
-        address: 'New York No. 1 Lake Park',
-    },
-    {
-        key: '2',
-        name: 'Jim Green',
-        age: 42,
-        address: 'London No. 1 Lake Park',
-    },
-    {
-        key: '3',
-        name: 'Joe Black',
-        age: 32,
-        address: 'Sidney No. 1 Lake Park',
-    },
-];
-
-function Tables() {}
+function Content(props: { buildings: BuildingInfo[]; isLoading: boolean }) {
+    const dataSource: any[] | undefined = [];
+    props.buildings.forEach((info, index) => {
+        dataSource.push(Object.assign({ key: index }, info));
+    });
+    return <Table columns={columns} dataSource={dataSource} loading={props.isLoading} />;
+}

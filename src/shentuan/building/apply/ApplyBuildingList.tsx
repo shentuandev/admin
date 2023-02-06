@@ -1,8 +1,18 @@
 import { Button, Card, Col, Modal, Row, Table } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
-import { getAllBuildingApplyList } from '../../../axios';
+import { examineBuildingApply, getAllBuildingApplyList } from '../../../axios';
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom';
 import { BuildingApplyInfo } from '../../types/BuildingApplyInfo';
+import { toast, toastNetworkError } from './../../../utils/index';
+
+const ApplyStatus = {
+    REJECT: 0,
+    PASS: 2,
+    APPLYING: 1,
+    UNKNOWN: -1,
+};
+
+let refresh = () => {};
 
 export function ApplyBuildingList() {
     const [data, updateData] = useState(1);
@@ -15,7 +25,7 @@ export function ApplyBuildingList() {
             updateLoadingState(false);
         });
     }, [data]);
-    const updatePage = () => {
+    refresh = () => {
         updateData(data + 1);
     };
     return (
@@ -25,11 +35,7 @@ export function ApplyBuildingList() {
                 <Col className="gutter-row" md={24}>
                     <div className="gutter-box">
                         <Card bordered={false}>
-                            <Content
-                                buildings={allApplyInfo}
-                                isLoading={isLoading}
-                                updatePage={updatePage}
-                            />
+                            <Content buildings={allApplyInfo} isLoading={isLoading} />
                         </Card>
                     </div>
                 </Col>
@@ -75,19 +81,51 @@ const columns = [
         key: 'action',
         render: (text: any, record: any) => (
             <span>
-                {record.status === '申请中' && (
-                    <ComfirmDialog buildingId={record.buildingId} merchantId={record.merchantId} />
-                )}
+                <ComfirmDialog
+                    buildingId={record.buildingId}
+                    merchantId={record.merchantId}
+                    status={record.status}
+                    buildingName={record.buildingName}
+                    merchantName={record.merchantName}
+                />
             </span>
         ),
     },
 ];
 
-function ComfirmDialog(props: { buildingId: string; merchantId: string }) {
+function ComfirmDialog(props: {
+    buildingId: string;
+    merchantId: string;
+    status: string;
+    buildingName: string;
+    merchantName: string;
+}) {
     const [show, updateShow] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
     const passApply = useRef(true);
-    const onOk = () => {};
+
+    const request = (status: number, noticeTitle: string) => {
+        setConfirmLoading(true);
+        examineBuildingApply(props.buildingId, props.merchantId, status)
+            .then((data) => {
+                toast(noticeTitle, '审批成功');
+                setTimeout(() => {
+                    refresh();
+                }, 0);
+                setConfirmLoading(false);
+            })
+            .catch((data) => {
+                toastNetworkError(data);
+                setConfirmLoading(false);
+            })
+            .finally(() => {
+                updateShow(false);
+            });
+    };
+
+    const onOk = () => {
+        request(passApply.current ? ApplyStatus.PASS : ApplyStatus.REJECT, '入驻审核');
+    };
     const onCancel = () => {
         updateShow(false);
     };
@@ -95,6 +133,25 @@ function ComfirmDialog(props: { buildingId: string; merchantId: string }) {
         passApply.current = pass;
         updateShow(true);
     };
+
+    if (props.status === '已入驻') {
+        return (
+            <span>
+                <Button onClick={() => updateShow(true)}>强制退驻</Button>
+                <Modal
+                    title="强制退驻"
+                    visible={show}
+                    onOk={() => {
+                        request(ApplyStatus.REJECT, '强制退驻');
+                    }}
+                    onCancel={onCancel}
+                    confirmLoading={confirmLoading}
+                >
+                    <p>确定强制该用户退驻吗？</p>
+                </Modal>
+            </span>
+        );
+    }
     return (
         <span>
             <Button onClick={() => onClick(true)}>通过</Button>
@@ -112,22 +169,18 @@ function ComfirmDialog(props: { buildingId: string; merchantId: string }) {
     );
 }
 
-function Content(props: {
-    buildings: BuildingApplyInfo[];
-    isLoading: boolean;
-    updatePage: Function;
-}) {
+function Content(props: { buildings: BuildingApplyInfo[]; isLoading: boolean }) {
     const dataSource: any[] | undefined = [];
     props.buildings.forEach((info, index) => {
         const data = Object.assign({ key: index }, info);
         const status = info.status;
-        if (status === -1) {
+        if (status === ApplyStatus.UNKNOWN) {
             data.status = '未入驻';
-        } else if (status === 0) {
+        } else if (status === ApplyStatus.REJECT) {
             data.status = '已驳回';
-        } else if (status === 1) {
+        } else if (status === ApplyStatus.APPLYING) {
             data.status = '申请中';
-        } else if (status === 2) {
+        } else if (status === ApplyStatus.PASS) {
             data.status = '已入驻';
         }
         dataSource.push(data);

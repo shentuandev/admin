@@ -1,6 +1,9 @@
 /**
  * Created by hao.cheng on 2017/4/28.
  */
+
+import { notification } from 'antd';
+
 // 获取url的参数
 export const queryString = () => {
     let _queryString: { [key: string]: any } = {};
@@ -26,3 +29,12 @@ export const queryString = () => {
  */
 export const checkLogin = (permits: any): boolean =>
     (process.env.NODE_ENV === 'production' && !!permits) || process.env.NODE_ENV === 'development';
+
+export function toast(title: string, des: string | undefined) {
+    notification.open({
+        message: title,
+        description: des,
+    });
+}
+
+export function toastNetworkError(data: any) {}

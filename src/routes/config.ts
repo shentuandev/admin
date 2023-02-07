@@ -38,7 +38,7 @@ const menus: {
                 {
                     key: '/app/merchant/settle_status',
                     title: '入驻详情',
-                    component: 'BuildingList',
+                    component: 'MerchantSettleList',
                 },
                 {
                     key: '/app/merchant/settle_apply',

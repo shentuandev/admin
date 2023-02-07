@@ -5,7 +5,7 @@
 import Loadable from 'react-loadable';
 import { ApplyBuildingList } from '../shentuan/building/apply/ApplyBuildingList';
 import { BuildingList } from '../shentuan/building/list/BuildingList';
-import { MerchantShettleList } from '../shentuan/merchant/shettle_list/BuildingList';
+import { MerchantSettleList } from '../shentuan/merchant/shettle_list/MerchantSettleList';
 import BasicAnimations from './animation/BasicAnimations';
 import ExampleAnimations from './animation/ExampleAnimations';
 import AuthBasic from './auth/Basic';
@@ -42,7 +42,7 @@ const WysiwygBundle = Loadable({
 });
 
 export default {
-    MerchantShettleList,
+    MerchantSettleList,
     ApplyBuildingList,
     BuildingList,
     BasicForm,

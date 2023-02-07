@@ -53,3 +53,5 @@ export const getAllBuildingApplyList = () => post({ url: '/manage/buildingMercha
 // 审核入驻申请，可强制取消某个商家的入驻
 export const examineBuildingApply = (buildingId: string, merchantId: string, status: number) =>
     post({ url: '/manage/confirmBuildingMerchant', data: { buildingId, merchantId, status } });
+
+export const getAllMerchants = () => post({ url: '/manage/merchantList' });

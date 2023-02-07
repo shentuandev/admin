@@ -1,12 +1,12 @@
 /**
  * Created by hao.cheng on 2017/4/16.
  */
-import React from 'react';
-import { Form, Icon, Input, Button, Checkbox } from 'antd';
-import { PwaInstaller } from '../widget';
-import { connectAlita } from 'redux-alita';
-import { RouteComponentProps } from 'react-router';
+import { Button, Form, Icon, Input } from 'antd';
 import { FormProps } from 'antd/lib/form';
+import Search from 'antd/lib/input/Search';
+import React from 'react';
+import { RouteComponentProps } from 'react-router';
+import { connectAlita } from 'redux-alita';
 import umbrella from 'umbrella-storage';
 
 const FormItem = Form.Item;
@@ -53,8 +53,7 @@ class Login extends React.Component<LoginProps> {
             <div className="login">
                 <div className="login-form">
                     <div className="login-logo">
-                        <span>React Admin</span>
-                        <PwaInstaller />
+                        <span>神团管理后台</span>
                     </div>
                     <Form onSubmit={this.handleSubmit} style={{ maxWidth: '300px' }}>
                         <FormItem>
@@ -68,24 +67,19 @@ class Login extends React.Component<LoginProps> {
                             )}
                         </FormItem>
                         <FormItem>
-                            {getFieldDecorator('password', {
-                                rules: [{ required: true, message: '请输入密码!' }],
+                            {getFieldDecorator('smscode', {
+                                rules: [{ required: true, message: '请输入验证码!' }],
                             })(
-                                <Input
-                                    prefix={<Icon type="lock" style={{ fontSize: 13 }} />}
-                                    type="password"
-                                    placeholder="管理员输入admin, 游客输入guest"
+                                <Search
+                                    prefix={<Icon type="safety" style={{ fontSize: 13 }} />}
+                                    placeholder="请输入验证码"
+                                    enterButton="获取验证码"
+                                    onSearch={(value) => console.log(value)}
                                 />
                             )}
                         </FormItem>
+
                         <FormItem>
-                            {getFieldDecorator('remember', {
-                                valuePropName: 'checked',
-                                initialValue: true,
-                            })(<Checkbox>记住我</Checkbox>)}
-                            <span className="login-form-forgot" style={{ float: 'right' }}>
-                                忘记密码
-                            </span>
                             <Button
                                 type="primary"
                                 htmlType="submit"
@@ -94,13 +88,6 @@ class Login extends React.Component<LoginProps> {
                             >
                                 登录
                             </Button>
-                            <p style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <span>或 现在就去注册!</span>
-                                <span onClick={this.gitHub}>
-                                    <Icon type="github" />
-                                    (第三方登录)
-                                </span>
-                            </p>
                         </FormItem>
                     </Form>
                 </div>

@@ -6,7 +6,6 @@ import HeaderCustom from './components/HeaderCustom';
 import SiderCustom from './components/SiderCustom';
 import { Copyright, ThemePicker } from './components/widget';
 import Routes from './routes';
-import { checkLogin } from './utils';
 
 const { Content, Footer } = Layout;
 
@@ -54,9 +53,7 @@ const App = (props: AppProps) => {
     }
     return (
         <Layout>
-            {!responsive.isMobile && checkLogin(auth.permissions) && (
-                <SiderCustom collapsed={collapsed} />
-            )}
+            <SiderCustom collapsed={collapsed} />
             <ThemePicker />
             <Layout className="app_layout">
                 <HeaderCustom toggle={toggle} collapsed={collapsed} user={auth || {}} />

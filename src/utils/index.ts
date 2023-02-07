@@ -27,8 +27,7 @@ export const queryString = () => {
  * 校验是否登录
  * @param permits
  */
-export const checkLogin = (permits: any): boolean =>
-    (process.env.NODE_ENV === 'production' && !!permits) || process.env.NODE_ENV === 'development';
+export const checkLogin = (permits: any): boolean => false; // (process.env.NODE_ENV === 'production' && !!permits) || process.env.NODE_ENV === 'development';
 
 export function toast(title: string, des: string | undefined) {
     notification.open({

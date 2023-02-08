@@ -52,7 +52,7 @@ export async function get({ url, msg = '接口异常', config }: IFRequestParam)
  * @param msg       接口异常提示
  * @param headers   接口所需header配置
  */
-export async function post({ url, data, msg = '接口异常' }: IFRequestParam) {
+export async function post({ url, data }: IFRequestParam) {
     if (!_.startsWith(url, 'https')) {
         url = HOST + url;
     }
@@ -60,9 +60,14 @@ export async function post({ url, data, msg = '接口异常' }: IFRequestParam) 
     dataWrap.timeStamp = Date.now();
     try {
         const res = await axios.post(url, dataWrap);
-        return res.data.data;
+        if (res.data.msgCode !== 0) {
+            throw res.data.message;
+        } else {
+            return res.data.data;
+        }
     } catch (err) {
         console.log(err);
-        message.warn(msg);
+        message.warn(err);
+        throw err;
     }
 }

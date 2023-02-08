@@ -46,12 +46,16 @@ export const guest = () => get({ url: config.MOCK_AUTH_VISITOR });
 /** 获取服务端菜单 */
 export const fetchMenu = () => get({ url: config.MOCK_MENU });
 
-export const getAllBuildings = () => post({ url: '/manage/getBuildings' });
+export const getAllBuildings = () => post({ url: '/background/manage/getBuildings' });
 
-export const getAllBuildingApplyList = () => post({ url: '/manage/buildingMerchantList' });
+export const getAllBuildingApplyList = () =>
+    post({ url: '/background/manage/buildingMerchantList' });
 
 // 审核入驻申请，可强制取消某个商家的入驻
 export const examineBuildingApply = (buildingId: string, merchantId: string, status: number) =>
     post({ url: '/manage/confirmBuildingMerchant', data: { buildingId, merchantId, status } });
 
-export const getAllMerchants = () => post({ url: '/manage/merchantList' });
+export const getAllMerchants = () => post({ url: '/background/manage/merchantList' });
+
+export const requestSMSCode = (phoneNo: string) =>
+    post({ url: '/smsSend/single', data: { phoneNo, businessType: 1 } });

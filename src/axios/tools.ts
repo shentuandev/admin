@@ -4,15 +4,28 @@
  */
 import { message } from 'antd';
 import axios from 'axios';
-import _, { isUndefined } from 'lodash';
+import _, { isEmpty, isUndefined } from 'lodash';
+import umbrella from 'umbrella-storage';
 import { HOST } from './config';
 
 export const HEADERS = {
-    Authorization:
-        'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJzaGVudHVhbiIsImV4cCI6MTY3NTUxNjU4OSwiaWF0IjoxNjc1NTE1ODEyLCJ1c2VySWQiOiIxNzYyNTkwMjE0MyJ9.hIzhTjWwby6iGipXak8OzQ2WsxNkixr05ZJITLPdBSw',
+    Authorization: '',
 };
 axios.defaults.headers.common['Authorization'] = HEADERS.Authorization;
 axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded';
+
+export function updateToken(token: string) {
+    HEADERS.Authorization = token;
+    umbrella.setLocalStorage('token', token);
+    axios.defaults.headers.common['Authorization'] = token;
+}
+
+function getToken() {
+    if (isEmpty(HEADERS.Authorization)) {
+        HEADERS.Authorization = umbrella.getLocalStorage('token');
+    }
+    return HEADERS.Authorization;
+}
 
 interface IFRequestParam {
     url: string;

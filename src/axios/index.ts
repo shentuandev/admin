@@ -59,3 +59,6 @@ export const getAllMerchants = () => post({ url: '/background/manage/merchantLis
 
 export const requestSMSCode = (phoneNo: string) =>
     post({ url: '/smsSend/single', data: { phoneNo, businessType: 1 } });
+
+export const login = (username: string, phoneNo: string, smsCode: string) =>
+    post({ url: '/background/login', data: { username, phoneNo, smsCode } });

@@ -3,6 +3,7 @@
  */
 
 import { notification } from 'antd';
+import { isEmpty } from 'lodash';
 
 // 获取url的参数
 export const queryString = () => {
@@ -37,3 +38,13 @@ export function toast(title: string, des: string | undefined) {
 }
 
 export function toastNetworkError(data: any) {}
+
+export function checkPhone(mobile: string) {
+    if (!mobile || isEmpty(mobile)) return false;
+    var myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
+    if (!myreg.test(mobile)) {
+        return false;
+    } else {
+        return true;
+    }
+}

@@ -1,15 +1,17 @@
 /**
  * Created by hao.cheng on 2017/4/16.
  */
-import { Button, Form, Icon, Input } from 'antd';
+import { Button, Form, Icon, Input, message } from 'antd';
 import { FormProps } from 'antd/lib/form';
 import Search from 'antd/lib/input/Search';
 import Countdown from 'antd/lib/statistic/Countdown';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { connectAlita } from 'redux-alita';
 import umbrella from 'umbrella-storage';
-import { requestSMSCode } from '../../axios';
+import { login, requestSMSCode } from '../../axios';
+import { updateToken } from '../../axios/tools';
+import { checkPhone } from '../../utils';
 
 const FormItem = Form.Item;
 type LoginProps = {
@@ -126,6 +128,7 @@ function setIntervalLocal(callback: (cur: number) => any, seconds: number, onFin
 function Login2(props: LoginProps) {
     const countdownCount = 10;
     const { setAlitaState } = props;
+    const phoneNumber = useRef('');
     const [countdownTimer, updateCountdownTimer] = useState(0);
     useEffect(() => {
         setAlitaState({ stateName: 'auth', data: null });
@@ -133,7 +136,11 @@ function Login2(props: LoginProps) {
 
     const doRequestSMSCode = () => {
         if (countdownTimer !== 0) return;
-        requestSMSCode('17625902143')
+        if (!checkPhone(phoneNumber.current)) {
+            message.warn('请填写准确的电话号码');
+            return;
+        }
+        requestSMSCode(phoneNumber.current)
             .then((data) => {
                 console.log('smscode', data);
             })
@@ -162,6 +169,14 @@ function Login2(props: LoginProps) {
                     setAlitaState({ funcName: 'admin', stateName: 'auth' });
                 if (values.userName === 'guest' && values.password === 'guest')
                     setAlitaState({ funcName: 'guest', stateName: 'auth' });
+
+                login(values.userName, values.phoneNumber, values.smscode)
+                    .then((data) => {
+                        updateToken(data);
+                    })
+                    .catch((data) => {
+                        console.log('error', data);
+                    });
             }
         });
     };
@@ -191,6 +206,9 @@ function Login2(props: LoginProps) {
                             <Input
                                 prefix={<Icon type="phone" style={{ fontSize: 13 }} />}
                                 placeholder="请输入电话号码"
+                                onChange={({ target: { value } }) => {
+                                    phoneNumber.current = value;
+                                }}
                             />
                         )}
                     </FormItem>
@@ -202,17 +220,17 @@ function Login2(props: LoginProps) {
                                 prefix={<Icon type="safety" style={{ fontSize: 13 }} />}
                                 placeholder="请输入验证码"
                                 enterButton={countdownTimer === 0 ? '获取验证码' : countdownTimer}
-                                onSearch={(value) => doRequestSMSCode()}
+                                onSearch={() => doRequestSMSCode()}
                             />
                         )}
                     </FormItem>
-
                     <FormItem>
                         <Button
                             type="primary"
                             htmlType="submit"
                             className="login-form-button"
                             style={{ width: '100%' }}
+                            onClick={(e) => handleSubmit(e)}
                         >
                             登录
                         </Button>

@@ -31,7 +31,7 @@ export const queryString = () => {
  */
 export const checkLogin = (): boolean => !isEmpty(getToken()); // (process.env.NODE_ENV === 'production' && !!permits) || process.env.NODE_ENV === 'development';
 
-export function toast(title: string, des: string | undefined) {
+export function toast(title: string, des: string | undefined = '') {
     notification.open({
         message: title,
         description: des,

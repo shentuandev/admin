@@ -1,8 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Card, Col, Divider, Modal, Row, Table, Tag } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { getAllMerchants } from '../../../axios';
+import { Card, Col, Divider, Input, Modal, Row, Table, Tag } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
+import { confirmMerchant, getAllMerchants } from '../../../axios';
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom';
+import { toast } from '../../../utils';
 import { MerchantInfo } from '../../types/MerchantInfo';
 
 const OperationStatus = {
@@ -18,7 +19,10 @@ const ApplyStatus = {
     SUCCEED: 20,
 };
 
+let refresh = () => {};
+
 export function MerchantSettleList() {
+    const [data, updateData] = useState(1);
     const [allMerchants, updateAllMerchants] = useState<MerchantInfo[]>([]);
     const [isLoading, updateLoadingState] = useState<boolean>(true);
     useEffect(() => {
@@ -26,7 +30,10 @@ export function MerchantSettleList() {
             updateAllMerchants(data.list);
             updateLoadingState(false);
         });
-    }, []);
+    }, [data]);
+    refresh = () => {
+        updateData(data + 1);
+    };
     return (
         <div className="gutter-example">
             <BreadcrumbCustom first="楼栋管理" second="楼栋列表" />
@@ -112,19 +119,30 @@ const columns = [
                 <span>
                     {status === ApplyStatus.APPLYING && (
                         <span>
-                            <Examine title="通过" des="确定通过该商户入驻申请吗？" approved />
+                            <Examine
+                                title="通过"
+                                des="确定通过该商户入驻申请吗？"
+                                approved
+                                buildingId={record.merchantId}
+                            />
                             <Divider type="vertical" />
                             <Examine
                                 title="驳回"
                                 des="确定驳回该商户入驻申请吗？"
                                 approved={false}
+                                buildingId={record.merchantId}
                             />
                             <Divider type="vertical" />
                         </span>
                     )}
                     {status === ApplyStatus.SUCCEED && (
                         <span>
-                            <Examine title="强制退驻" des="确定将该商家强制退驻吗？" approved />
+                            <Examine
+                                title="强制退驻"
+                                des="确定将该商家强制退驻吗？"
+                                approved={false}
+                                buildingId={record.merchantId}
+                            />
                             <Divider type="vertical" />
                         </span>
                     )}
@@ -135,9 +153,37 @@ const columns = [
     },
 ];
 
-function Examine(props: { title: string | null; des: string; approved: boolean }) {
+function Examine(props: {
+    title: string | null;
+    des: string;
+    approved: boolean;
+    buildingId: string;
+}) {
     const [show, updateShow] = useState(false);
+    const rejectMessage = useRef('');
     const [confirmLoading, updateConfirmLoading] = useState(false);
+
+    const doExamin = () => {
+        if (confirmLoading) return;
+        updateConfirmLoading(true);
+        confirmMerchant(props.buildingId, props.approved ? 20 : 0, rejectMessage.current).then(
+            (data) => {
+                console.log('data', data);
+                updateConfirmLoading(false);
+                updateShow(false);
+                toast('审核成功');
+                setTimeout(() => {
+                    refresh();
+                }, 0);
+            },
+            (err) => {
+                updateConfirmLoading(false);
+                console.log('err', err);
+                toast('审核失败');
+            }
+        );
+    };
+
     return (
         <span>
             <a
@@ -151,7 +197,8 @@ function Examine(props: { title: string | null; des: string; approved: boolean }
                 title={props.title}
                 visible={show}
                 onOk={() => {
-                    updateShow(false);
+                    // updateShow(false);
+                    doExamin();
                 }}
                 onCancel={() => {
                     updateShow(false);
@@ -159,6 +206,14 @@ function Examine(props: { title: string | null; des: string; approved: boolean }
                 confirmLoading={confirmLoading}
             >
                 <p>{props.des}</p>
+                {!props.approved && (
+                    <Input
+                        placeholder="请输入拒绝理由"
+                        onChange={({ target: { value } }) => {
+                            rejectMessage.current = value;
+                        }}
+                    />
+                )}
             </Modal>
         </span>
     );

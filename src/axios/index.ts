@@ -57,6 +57,9 @@ export const examineBuildingApply = (buildingId: string, merchantId: string, sta
 
 export const getAllMerchants = () => post({ url: '/background/manage/merchantList' });
 
+export const confirmMerchant = (merchantId: string, applyStatus: number, remark: string) =>
+    post({ url: '/background/manage/confirmMerchant', data: { merchantId, applyStatus, remark } });
+
 export const requestSMSCode = (phoneNo: string) =>
     post({ url: '/smsSend/single', data: { phoneNo, businessType: 1 } });
 

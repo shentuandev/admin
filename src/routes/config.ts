@@ -41,14 +41,9 @@ const menus: {
                     component: 'MerchantSettleList',
                 },
                 {
-                    key: '/app/merchant/settle_apply',
-                    title: '入驻申请',
-                    component: 'ApplyBuildingList',
-                },
-                {
                     key: '/app/merchant/bank_info',
                     title: '收款信息',
-                    component: 'ApplyBuildingList',
+                    component: 'Payment',
                 },
                 {
                     key: '/app/merchant/withdraw_money',

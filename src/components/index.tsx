@@ -5,6 +5,7 @@
 import Loadable from 'react-loadable';
 import { ApplyBuildingList } from '../shentuan/building/apply/ApplyBuildingList';
 import { BuildingList } from '../shentuan/building/list/BuildingList';
+import { Payment } from '../shentuan/merchant/payment/Payment';
 import { MerchantSettleList } from '../shentuan/merchant/shettle_list/MerchantSettleList';
 import BasicAnimations from './animation/BasicAnimations';
 import ExampleAnimations from './animation/ExampleAnimations';
@@ -42,6 +43,7 @@ const WysiwygBundle = Loadable({
 });
 
 export default {
+    Payment,
     MerchantSettleList,
     ApplyBuildingList,
     BuildingList,

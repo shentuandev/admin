@@ -70,3 +70,8 @@ export const autoRefreshToken = () => get({ url: '/background/check' });
 
 export const merchantApplyDetail = (merchantId: string) =>
     get({ url: '/background/manage/merchantDetail', data: { merchantId } });
+
+export const paymentList = () => post({ url: '/background/manage/collectAccounts' });
+
+export const confirmAccount = (accountId: string, status: number, remark: string) =>
+    post({ url: '/background/manage/confirmAccount', data: { accountId, status, remark } });

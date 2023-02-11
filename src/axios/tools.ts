@@ -111,12 +111,11 @@ export async function post({ url, data }: IFRequestParam) {
     try {
         const res = await axios.post(url, dataWrap);
         if (res.data.msgCode !== 0) {
-            throw res.data.message;
+            throw new Error(res.data.message);
         } else {
             return res.data.data;
         }
     } catch (err) {
-        console.log(err);
         console.log(err);
         if (err instanceof Error) {
             message.warn(err.message);

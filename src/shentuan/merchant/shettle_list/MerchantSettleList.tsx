@@ -106,7 +106,7 @@ const columns = [
     {
         title: '审批',
         dataIndex: 'applyStatus',
-        key: 'applyStatus',
+        key: 'examine',
         render: (status: number, record: any) => {
             return (
                 <span>

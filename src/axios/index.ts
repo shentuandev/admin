@@ -75,3 +75,8 @@ export const paymentList = () => post({ url: '/background/manage/collectAccounts
 
 export const confirmAccount = (accountId: string, status: number, remark: string) =>
     post({ url: '/background/manage/confirmAccount', data: { accountId, status, remark } });
+
+export const cashList = () => post({ url: '/background/manage/merCashOutList' });
+
+export const accountDetail = (merchantId: string) =>
+    get({ url: '/background/manage/getCollectionAccount', data: { merchantId } });

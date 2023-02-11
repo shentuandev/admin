@@ -48,7 +48,7 @@ const menus: {
                 {
                     key: '/app/merchant/withdraw_money',
                     title: '提现列表',
-                    component: 'ApplyBuildingList',
+                    component: 'CashList',
                 },
                 {
                     key: '/app/merchant/business_statics',

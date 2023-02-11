@@ -86,7 +86,8 @@ export async function get({ url, data }: IFRequestParam) {
         if (res.data.msgCode !== 0) {
             throw res.data.message;
         } else {
-            return res.data.data;
+            console.log('res', res);
+            return res.data.data.data;
         }
     } catch (err) {
         console.log(err);

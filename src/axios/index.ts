@@ -62,3 +62,5 @@ export const requestSMSCode = (phoneNo: string) =>
 
 export const login = (username: string, phoneNo: string, smsCode: string) =>
     post({ url: '/background/login', data: { username, phoneNo, smsCode } });
+
+export const autoRefreshToken = () => get({ url: '/background/check' });

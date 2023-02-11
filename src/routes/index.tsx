@@ -8,27 +8,16 @@ import { checkLogin } from '../utils';
 import routesConfig, { IFMenu, IFMenuBase } from './config';
 import RouteWrapper from './RouteWrapper';
 
-type CRouterProps = {
-    auth: any;
-};
+type CRouterProps = {};
 
 const CRouter = (props: CRouterProps) => {
-    const { auth } = props;
-    const getPermits = (): any[] | null => {
-        return auth ? auth.permissions : null;
-    };
-    const requireAuth = (permit: any, component: React.ReactElement) => {
-        const permits = getPermits();
-        if (!permits || !permits.includes(permit)) return <Redirect to={'404'} />;
-        return component;
-    };
-    const requireLogin = (component: React.ReactElement, permit: any) => {
-        const permits = getPermits();
-        if (!checkLogin(permits)) {
+    const requireLogin = (component: React.ReactElement) => {
+        if (!checkLogin()) {
             // 线上环境判断是否登录
+            console.log('goto login');
             return <Redirect to={'/login'} />;
         }
-        return permit ? requireAuth(permit, component) : component;
+        return component;
     };
     const createMenu = (r: IFMenu) => {
         const route = (r: IFMenuBase) => {
@@ -43,7 +32,7 @@ const CRouter = (props: CRouterProps) => {
                         const wrapper = (
                             <RouteWrapper {...{ ...props, Comp: Component, route: r }} />
                         );
-                        return r.login ? wrapper : requireLogin(wrapper, r.requireAuth);
+                        return r.login ? wrapper : requireLogin(wrapper);
                     }}
                 />
             );

@@ -7,6 +7,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { connectAlita } from 'redux-alita';
 import screenfull from 'screenfull';
 import umbrella from 'umbrella-storage';
+import { removeToken } from '../axios/tools';
 import { gitOauthInfo, gitOauthToken } from '../service';
 import avater from '../style/imgs/b1.jpg';
 import { queryString } from '../utils';
@@ -61,6 +62,7 @@ class HeaderCustom extends Component<HeaderCustomProps, HeaderCustomState> {
         e.key === 'logout' && this.logout();
     };
     logout = () => {
+        removeToken();
         umbrella.removeLocalStorage('user');
         this.props.history.push('/login');
     };

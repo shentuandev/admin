@@ -2,16 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { AlitaProvider, setConfig } from 'redux-alita';
 import umbrella from 'umbrella-storage';
+import { initAxios } from './axios/tools';
 import Page from './Page';
-import * as serviceWorker from './serviceWorker';
 import * as apis from './service';
+import * as serviceWorker from './serviceWorker';
 // import { AppContainer } from 'react-hot-loader';
-import './style/lib/animate.css';
-import './style/index.less';
 import './style/antd/index.less';
+import './style/index.less';
+import './style/lib/animate.css';
 
 setConfig(apis);
 umbrella.config('REACT-ADMIN');
+initAxios();
 // const render = Component => { // 增加react-hot-loader保持状态刷新操作，如果不需要可去掉并把下面注释的打开
 //     ReactDOM.render(
 //         <AppContainer>

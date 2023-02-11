@@ -4,6 +4,7 @@
 
 import { notification } from 'antd';
 import { isEmpty } from 'lodash';
+import { getToken } from '../axios/tools';
 
 // 获取url的参数
 export const queryString = () => {
@@ -28,7 +29,7 @@ export const queryString = () => {
  * 校验是否登录
  * @param permits
  */
-export const checkLogin = (permits: any): boolean => false; // (process.env.NODE_ENV === 'production' && !!permits) || process.env.NODE_ENV === 'development';
+export const checkLogin = (): boolean => !isEmpty(getToken()); // (process.env.NODE_ENV === 'production' && !!permits) || process.env.NODE_ENV === 'development';
 
 export function toast(title: string, des: string | undefined) {
     notification.open({

@@ -67,3 +67,6 @@ export const login = (username: string, phoneNo: string, smsCode: string) =>
     post({ url: '/background/login', data: { username, phoneNo, smsCode } });
 
 export const autoRefreshToken = () => get({ url: '/background/check' });
+
+export const merchantApplyDetail = (merchantId: string) =>
+    get({ url: '/background/manage/merchantDetail', data: { merchantId } });

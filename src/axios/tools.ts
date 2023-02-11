@@ -77,8 +77,10 @@ export async function get({ url, data }: IFRequestParam) {
     if (!_.startsWith(url, 'https')) {
         url = HOST + url;
     }
-    const dataWrap = isUndefined(data) ? {} : data;
-    dataWrap.timeStamp = Date.now();
+    const dataWrap = { params: { timeStamp: Date.now() } };
+    if (data) {
+        Object.assign(dataWrap.params, data);
+    }
     try {
         const res = await axios.get(url, dataWrap);
         if (res.data.msgCode !== 0) {

@@ -1,7 +1,19 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Card, Col, Divider, Input, Modal, Row, Table, Tag } from 'antd';
+import {
+    Card,
+    Col,
+    Descriptions,
+    Divider,
+    Drawer,
+    Input,
+    Modal,
+    Row,
+    Spin,
+    Table,
+    Tag,
+} from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
-import { confirmMerchant, getAllMerchants } from '../../../axios';
+import { confirmMerchant, getAllMerchants, merchantApplyDetail } from '../../../axios';
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom';
 import { toast } from '../../../utils';
 import { MerchantInfo } from '../../types/MerchantInfo';
@@ -21,10 +33,14 @@ const ApplyStatus = {
 
 let refresh = () => {};
 
+let showMerhcantDetail = (info: MerchantInfo | null) => {};
+
 export function MerchantSettleList() {
     const [data, updateData] = useState(1);
     const [allMerchants, updateAllMerchants] = useState<MerchantInfo[]>([]);
     const [isLoading, updateLoadingState] = useState<boolean>(true);
+    const [showingMerchantInfo, updateShowingMerchantInfo] = useState<MerchantInfo | null>(null);
+    showMerhcantDetail = updateShowingMerchantInfo;
     useEffect(() => {
         getAllMerchants().then((data) => {
             updateAllMerchants(data.list);
@@ -36,7 +52,7 @@ export function MerchantSettleList() {
     };
     return (
         <div className="gutter-example">
-            <BreadcrumbCustom first="楼栋管理" second="楼栋列表" />
+            <BreadcrumbCustom first="商户管理" second="入驻详情" />
             <Row gutter={16}>
                 <Col className="gutter-row" md={24}>
                     <div className="gutter-box">
@@ -46,6 +62,12 @@ export function MerchantSettleList() {
                     </div>
                 </Col>
             </Row>
+            {showingMerchantInfo != null && (
+                <ApplyMerchantDetail
+                    info={showingMerchantInfo}
+                    onClose={() => updateShowingMerchantInfo(null)}
+                />
+            )}
         </div>
     );
 }
@@ -146,7 +168,7 @@ const columns = [
                             <Divider type="vertical" />
                         </span>
                     )}
-                    <a>详情</a>
+                    <a onClick={() => showMerhcantDetail(record)}>详情</a>
                 </span>
             );
         },
@@ -225,4 +247,110 @@ function Content(props: { buildings: MerchantInfo[]; isLoading: boolean }) {
         dataSource.push(Object.assign({ key: index }, info));
     });
     return <Table columns={columns} dataSource={dataSource} loading={props.isLoading} />;
+}
+
+function ApplyMerchantDetail(props: { info: MerchantInfo; onClose: () => any }) {
+    const [info, updateInfo] = useState<MerchantInfo | null>(null);
+    useEffect(() => {
+        merchantApplyDetail(props.info.merchantId).then(
+            (data) => updateInfo(data),
+            (err) => {
+                console.log('err', err);
+            }
+        );
+    }, [props.info]);
+    let deadlineDate: Date | null = null;
+    if (info != null) {
+        deadlineDate = new Date(new Date().setHours(0, 0, 0, 0) + info.settingDto.orderDeadline);
+    }
+
+    return (
+        <div>
+            <Drawer
+                title={props.info.merchantName}
+                placement="right"
+                closable={false}
+                visible={props.info != null}
+                width="50%"
+                onClose={() => showMerhcantDetail(null)}
+            >
+                {info == null && <Spin />}
+                {info != null && (
+                    <div>
+                        <Descriptions bordered column={1} title="商户信息">
+                            <Descriptions.Item label="商户名称">
+                                {info.merchantName}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="电话">{info.phoneNo}</Descriptions.Item>
+                            <Descriptions.Item label="地址">
+                                {info.areaName + ' ' + info.address}
+                            </Descriptions.Item>
+
+                            <Descriptions.Item label="商户id">{info.merchantId}</Descriptions.Item>
+                            <Descriptions.Item label="商户token">
+                                {info.merchantToken}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="openid">{info.openid}</Descriptions.Item>
+                            <Descriptions.Item label="法人姓名">{info.ownerName}</Descriptions.Item>
+
+                            <Descriptions.Item label="法人身份证正面照">
+                                <img src={info.idCardFacePic} width={200} alt="cce" />
+                            </Descriptions.Item>
+                            <Descriptions.Item label="法人身份证背面照">
+                                <img src={info.idCardBackPic} width={200} alt="cce" />
+                            </Descriptions.Item>
+                            <Descriptions.Item label="营业执照">
+                                <img src={info.licensePic} width={200} alt="cce" />
+                            </Descriptions.Item>
+                            <Descriptions.Item label="卫生许可证">
+                                <img src={info.hygienicPic} width={200} alt="cce" />
+                            </Descriptions.Item>
+                            <Descriptions.Item label="首页图片">
+                                <img src={info.showPic} width={200} alt="cce" />
+                            </Descriptions.Item>
+                            <Descriptions.Item label="备注信息">{info.remark}</Descriptions.Item>
+
+                            <Descriptions.Item label="备注信息">{info.remark}</Descriptions.Item>
+                        </Descriptions>
+                        <Divider dashed />
+                        <Descriptions bordered column={1} title="商户设置">
+                            <Descriptions.Item label="用户点餐最低消费设置（单位分）">
+                                {info.settingDto.minLimit}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="餐团人数上限">
+                                {info.settingDto.groupLimit}
+                            </Descriptions.Item>
+                            {deadlineDate && (
+                                <Descriptions.Item label="当日点餐截止时间戳">
+                                    {convertDate(deadlineDate.getHours()) +
+                                        ':' +
+                                        convertDate(deadlineDate.getMinutes())}
+                                </Descriptions.Item>
+                            )}
+                            <Descriptions.Item label="订单送达时间">
+                                {info.settingDto.orderDeliveryTimes}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="一级优惠，提前3~7天优惠额度（单位分）">
+                                {info.settingDto.firstLevelDiscount}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="二级优惠，提前1~2天优惠额度（单位分）">
+                                {info.settingDto.secondLevelDiscount}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="三级优惠，提前1小时优惠额度（单位分）">
+                                {info.settingDto.thirdLevelDiscount}
+                            </Descriptions.Item>
+                        </Descriptions>
+                    </div>
+                )}
+            </Drawer>
+        </div>
+    );
+}
+
+function convertDate(count: number) {
+    if (count < 10) {
+        return '0' + count;
+    } else {
+        return count;
+    }
 }

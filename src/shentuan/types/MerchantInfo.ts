@@ -1,3 +1,5 @@
+import { MerchantSetting } from './MerchantSetting';
+
 export interface MerchantInfo {
     merchantId: string;
     merchantToken: any;
@@ -18,6 +20,6 @@ export interface MerchantInfo {
     remark: any;
     createTime: number;
     updateTime: number;
-    settingDto: any;
+    settingDto: MerchantSetting;
     countDto: any;
 }

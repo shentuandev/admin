@@ -134,6 +134,7 @@ const columns = [
             if (status === CashStatus.HANDLE_PROCESSING) {
                 return (
                     <a
+                        style={{ color: '#459AF9' }}
                         onClick={() => {
                             showMerhcantDetail(record);
                         }}

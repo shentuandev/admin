@@ -168,7 +168,9 @@ const columns = [
                             <Divider type="vertical" />
                         </span>
                     )}
-                    <a onClick={() => showMerhcantDetail(record)}>详情</a>
+                    <a style={{ color: '#459AF9' }} onClick={() => showMerhcantDetail(record)}>
+                        详情
+                    </a>
                 </span>
             );
         },
@@ -209,6 +211,7 @@ function Examine(props: {
     return (
         <span>
             <a
+                style={{ color: '#459AF9' }}
                 onClick={() => {
                     updateShow(true);
                 }}

@@ -178,6 +178,7 @@ function Examine(props: {
     return (
         <span>
             <a
+                style={{ color: '#459AF9' }}
                 onClick={() => {
                     updateShow(true);
                 }}

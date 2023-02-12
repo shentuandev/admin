@@ -159,7 +159,16 @@ function Content(props: { allCash: CashApplyDetail[]; isLoading: boolean }) {
     props.allCash.forEach((info, index) => {
         dataSource.push(Object.assign({ key: index }, info));
     });
-    return <Table columns={columns} dataSource={dataSource} loading={props.isLoading} />;
+    return (
+        <Table
+            columns={columns}
+            dataSource={dataSource}
+            loading={props.isLoading}
+            expandedRowRender={(record) => (
+                <p style={{ margin: 0 }}>本次提现的经营日期：{record.countDates}</p>
+            )}
+        />
+    );
 }
 
 function CashBankCardDetail(props: { info: CashApplyDetail }) {

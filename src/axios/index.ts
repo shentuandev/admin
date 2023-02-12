@@ -83,3 +83,5 @@ export const accountDetail = (merchantId: string) =>
 
 export const comfirCashOut = (recordId: number, remark: string) =>
     post({ url: '/background/manage/confirmCashOut', data: { recordId, remark } });
+
+export const dialyBusinessStatics = () => post({ url: '/background/manage/merDailyCounts' });

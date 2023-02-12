@@ -87,7 +87,11 @@ export async function get({ url, data }: IFRequestParam) {
             throw res.data.message;
         } else {
             console.log('res', res);
-            return res.data.data.data;
+            //TODO: 临时处理，server端数据解构异常
+            if (res.data.data.data) {
+                return res.data.data.data;
+            }
+            return res.data.data;
         }
     } catch (err) {
         console.log(err);

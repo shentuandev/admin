@@ -80,3 +80,6 @@ export const cashList = () => post({ url: '/background/manage/merCashOutList' })
 
 export const accountDetail = (merchantId: string) =>
     get({ url: '/background/manage/getCollectionAccount', data: { merchantId } });
+
+export const comfirCashOut = (recordId: number, remark: string) =>
+    post({ url: '/background/manage/confirmCashOut', data: { recordId, remark } });

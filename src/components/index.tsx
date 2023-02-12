@@ -8,6 +8,7 @@ import { BuildingList } from '../shentuan/building/list/BuildingList';
 import { CashList } from '../shentuan/merchant/cashlist/CashList';
 import { Payment } from '../shentuan/merchant/payment/Payment';
 import { MerchantSettleList } from '../shentuan/merchant/shettle_list/MerchantSettleList';
+import { BusinessStatics } from '../shentuan/merchant/statics/BusinessStatics';
 import BasicAnimations from './animation/BasicAnimations';
 import ExampleAnimations from './animation/ExampleAnimations';
 import AuthBasic from './auth/Basic';
@@ -44,6 +45,7 @@ const WysiwygBundle = Loadable({
 });
 
 export default {
+    BusinessStatics,
     CashList,
     Payment,
     MerchantSettleList,

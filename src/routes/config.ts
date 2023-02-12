@@ -53,7 +53,7 @@ const menus: {
                 {
                     key: '/app/merchant/business_statics',
                     title: '经营统计',
-                    component: 'ApplyBuildingList',
+                    component: 'BusinessStatics',
                 },
             ],
         },

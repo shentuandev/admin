@@ -1,7 +1,20 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Card, Col, Descriptions, Drawer, Row, Spin, Table, Tag } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { accountDetail, cashList } from '../../../axios';
+import {
+    Button,
+    Card,
+    Col,
+    Descriptions,
+    Divider,
+    Drawer,
+    Input,
+    Modal,
+    Row,
+    Spin,
+    Table,
+    Tag,
+} from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
+import { accountDetail, cashList, comfirCashOut } from '../../../axios';
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom';
 import { CashApplyDetail } from '../../types/CashApplyDetail';
 import { PaymentDetail } from '../../types/PaymentDetail';
@@ -151,10 +164,15 @@ function Content(props: { allCash: CashApplyDetail[]; isLoading: boolean }) {
 function CashBankCardDetail(props: { info: CashApplyDetail }) {
     const [info, updateInfo] = useState<PaymentDetail | null>(null);
     useEffect(() => {
-        accountDetail(props.info.merchantId).then((data) => {
-            console.log('data', data);
-            updateInfo(data);
-        });
+        accountDetail(props.info.merchantId).then(
+            (data) => {
+                console.log('data', data);
+                updateInfo(data);
+            },
+            (err) => {
+                console.log('err', err);
+            }
+        );
     }, [props.info]);
     return (
         <div>
@@ -168,23 +186,31 @@ function CashBankCardDetail(props: { info: CashApplyDetail }) {
             >
                 {info == null && <Spin />}
                 {info != null && (
-                    <Descriptions bordered column={2} title="商户收款信息">
-                        <Descriptions.Item label="accountId">{info.accountId}</Descriptions.Item>
-                        <Descriptions.Item label="merchantId">{info.merchantId}</Descriptions.Item>
-                        <Descriptions.Item label="收款银行卡账号">
-                            {info.accountNo}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="收款银行卡账户名">
-                            {info.accountName}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="银行名称">
-                            {info.accountBankName}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="银行卡状态">
-                            {convertStatus(info.status)}
-                        </Descriptions.Item>
-                        <Descriptions.Item label="备注">{info.remark}</Descriptions.Item>
-                    </Descriptions>
+                    <div>
+                        <Descriptions bordered column={2} title="商户收款信息">
+                            <Descriptions.Item label="accountId">
+                                {info.accountId}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="merchantId">
+                                {info.merchantId}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="收款银行卡账号">
+                                {info.accountNo}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="收款银行卡账户名">
+                                {info.accountName}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="银行名称">
+                                {info.accountBankName}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="银行卡状态">
+                                {convertStatus(info.status)}
+                            </Descriptions.Item>
+                            <Descriptions.Item label="备注">{info.remark}</Descriptions.Item>
+                        </Descriptions>
+                        <Divider />
+                        <ComfirCashOut recordId={props.info.recordId} />
+                    </div>
                 )}
             </Drawer>
         </div>
@@ -201,4 +227,85 @@ function convertStatus(status: number) {
     } else if (status === 2) {
         return '已绑定';
     }
+}
+
+function ComfirCashOut(props: { recordId: number }) {
+    const [showComfirDialog, updateShowComfirDialog] = useState(false);
+    const doExamine = (data: any) => {
+        return comfirCashOut(props.recordId, data.remark);
+    };
+    return (
+        <div>
+            <Button type="primary" size="large" onClick={() => updateShowComfirDialog(true)}>
+                商户提现已到账
+            </Button>
+            <Examine
+                title="商户提现已到账"
+                des="确定商户提现金额已到账，且金额准确吗？"
+                approved
+                show={showComfirDialog}
+                doExamine={(data) => doExamine(data)}
+                onCancel={() => updateShowComfirDialog(false)}
+                onFinished={() => updateShowComfirDialog(false)}
+            />
+        </div>
+    );
+}
+
+function Examine(props: {
+    title: string | null;
+    des: string;
+    approved: boolean;
+    show: boolean;
+    data?: any | undefined | null;
+    doExamine: (data: any | undefined, approved: boolean) => Promise<any>;
+    onCancel?: () => any;
+    onFinished: () => any;
+}) {
+    const rejectMessage = useRef('');
+    const [confirmLoading, updateConfirmLoading] = useState(false);
+
+    const doExamin = () => {
+        if (confirmLoading) return;
+        updateConfirmLoading(true);
+        const data = props.data || {};
+        data.remark = rejectMessage.current;
+        props.doExamine(props.approved, props.data).then(
+            (data) => {
+                updateConfirmLoading(false);
+                props.onFinished();
+            },
+            (err) => {
+                updateConfirmLoading(false);
+            }
+        );
+    };
+
+    if (!props.show) return null;
+
+    return (
+        <span>
+            <Modal
+                title={props.title}
+                visible
+                onOk={() => {
+                    doExamin();
+                }}
+                onCancel={() => {
+                    if (props.onCancel) {
+                        props.onCancel();
+                    }
+                }}
+                confirmLoading={confirmLoading}
+            >
+                <p>{props.des}</p>
+                <Input
+                    placeholder="请输入备注信息"
+                    onChange={({ target: { value } }) => {
+                        rejectMessage.current = value;
+                    }}
+                />
+            </Modal>
+        </span>
+    );
 }

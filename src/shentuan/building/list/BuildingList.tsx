@@ -1,4 +1,5 @@
-import { Card, Col, Row, Table } from 'antd';
+import { Card, Col, Row, Table, Tag } from 'antd';
+import _ from 'lodash';
 import React, { useEffect, useState } from 'react';
 import { getAllBuildings } from '../../../axios';
 import BreadcrumbCustom from '../../../components/BreadcrumbCustom';
@@ -9,7 +10,9 @@ export function BuildingList() {
     const [isLoading, updateLoadingState] = useState<boolean>(true);
     useEffect(() => {
         getAllBuildings().then((data) => {
-            updateBuildings(data.list);
+            const newData = data.list as BuildingInfo[];
+            _.remove(newData, (item) => item.status === 0);
+            updateBuildings(newData);
             updateLoadingState(false);
         });
     }, []);
@@ -55,21 +58,71 @@ const columns = [
         title: '入驻状态',
         dataIndex: 'settledStatus',
         key: 'settledStatus',
+        render: (status: number, record: any) => {
+            if (status === 1) {
+                return (
+                    <Tag color="green" key={status}>
+                        入驻未满
+                    </Tag>
+                );
+            } else {
+                return (
+                    <Tag color="volcano" key={status}>
+                        入驻已满
+                    </Tag>
+                );
+            }
+        },
     },
     {
-        title: '楼栋上限',
+        title: '商家入驻上限',
         dataIndex: 'upperLimit',
         key: 'upperLimit',
     },
     {
-        title: '驻商家数',
+        title: '入驻商家数',
         dataIndex: 'settledNum',
         key: 'settledNum',
     },
     {
-        title: '开放状态',
+        title: '开放商家入驻状态',
         dataIndex: 'applyStatus',
         key: 'applyStatus',
+        render: (status: number, record: any) => {
+            if (status === 1) {
+                return (
+                    <Tag color="green" key={status}>
+                        开放
+                    </Tag>
+                );
+            } else {
+                return (
+                    <Tag color="volcano" key={status}>
+                        关闭
+                    </Tag>
+                );
+            }
+        },
+    },
+    {
+        title: '开放用户点餐状态',
+        dataIndex: 'openStatus',
+        key: 'openStatus',
+        render: (status: number, record: any) => {
+            if (status === 1) {
+                return (
+                    <Tag color="green" key={status}>
+                        开放
+                    </Tag>
+                );
+            } else {
+                return (
+                    <Tag color="volcano" key={status}>
+                        关闭
+                    </Tag>
+                );
+            }
+        },
     },
 ];
 

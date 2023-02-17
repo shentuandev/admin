@@ -312,8 +312,6 @@ function ApplyMerchantDetail(props: { info: MerchantInfo; onClose: () => any }) 
                                 <img src={info.showPic} width={200} alt="cce" />
                             </Descriptions.Item>
                             <Descriptions.Item label="备注信息">{info.remark}</Descriptions.Item>
-
-                            <Descriptions.Item label="备注信息">{info.remark}</Descriptions.Item>
                         </Descriptions>
                         <Divider dashed />
                         <Descriptions bordered column={1} title="商户设置">

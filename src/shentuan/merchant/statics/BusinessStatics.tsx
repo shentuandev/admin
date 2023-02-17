@@ -26,12 +26,6 @@ export function BusinessStatics() {
     useEffect(() => {
         dialyBusinessStatics().then((data) => {
             // 添加测试数据
-            const newData = data.list as DialyBusinessStatics[];
-            newData[0].cashOutStatus = 0;
-            newData[1].cashOutStatus = 1;
-            newData[2].cashOutStatus = 2;
-            newData[3].cashOutStatus = 3;
-
             updateAllDialyBusinessStatics(data.list);
             updateLoadingState(false);
         });
@@ -158,25 +152,6 @@ const columns = [
         title: '提现状态',
         dataIndex: 'cashOutStatus',
         key: 'cashOutStatus',
-        filters: [
-            {
-                text: '不可提现',
-                value: '0',
-            },
-            {
-                text: '可提现',
-                value: '1',
-            },
-            {
-                text: '提现处理中',
-                value: '2',
-            },
-            {
-                text: '提现完成',
-                value: '3',
-            },
-        ],
-        onFilter: (value: number, record: DialyBusinessStatics) => value === record.cashOutStatus,
         render: (cashOutStatus: number) => {
             let content: string | number = cashOutStatus;
             let color = 'green';
